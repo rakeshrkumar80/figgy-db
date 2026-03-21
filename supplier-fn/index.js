@@ -1,38 +1,43 @@
-const { Firestore } = require('@google-cloud/firestore');
-const { PubSub } = require('@google-cloud/pubsub');
+const { Firestore } = require("@google-cloud/firestore");
+const { PubSub } = require("@google-cloud/pubsub");
 
 const firestore = new Firestore();
 const pubsub = new PubSub();
 
-exports.supplierFn = async (message) => {
+exports.supplierFn = async (cloudEvent) => {
 
-  const data = JSON.parse(
-    Buffer.from(message.data, 'base64').toString()
-  );
+  try {
 
-  const orderId = data.orderId;
+    const data = JSON.parse(
+      Buffer.from(cloudEvent.data, "base64").toString()
+    );
 
-  console.log("Processing order:", orderId);
+    const orderId = data.orderId;
 
-  // simulate supplier decision
-  const accepted = Math.random() > 0.5;
+    console.log("Processing order:", orderId);
 
-  const status = accepted ? "ACCEPTED" : "REJECTED";
+    // always accept
+    const status = "ACCEPTED";
 
-  await firestore
-    .collection("orders")
-    .doc(orderId)
-    .update({ status });
+    await firestore
+      .collection("orders")
+      .doc(orderId)
+      .update({ status });
 
-  const topic = accepted
-    ? "order-accepted"
-    : "order-rejected";
+    await pubsub
+      .topic("order-accepted")
+      .publishMessage({
+        data: Buffer.from(
+          JSON.stringify({ orderId })
+        )
+      });
 
-  await pubsub.topic(topic).publishMessage({
-    data: Buffer.from(
-      JSON.stringify({ orderId })
-    )
-  });
+    console.log("Updated:", status);
 
-  console.log("Order updated:", status);
+  } catch (err) {
+
+    console.error(err);
+
+  }
+
 };
