@@ -12,5 +12,13 @@
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/firestore": "^8.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakeshrkumar80/figgy-db.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rakeshrkumar80/figgy-db/issues"
+  },
+  "homepage": "https://github.com/rakeshrkumar80/figgy-db#readme"
 }

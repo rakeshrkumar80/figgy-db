@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>FIGGY</title>
+
+<style>
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+}
+
+/* header */
+
+header {
+  background: #fc8019;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* container */
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* card */
+
+.card {
+
+  width: 280px;
+  margin: 15px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px gray;
+  transition: 0.2s;
+
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+/* image */
+
+.card img {
+
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+
+}
+
+/* title */
+
+.card h3 {
+
+  margin: 10px;
+
+}
+
+/* button */
+
+.card button {
+
+  margin: 10px;
+  width: 90%;
+  padding: 10px;
+  border: none;
+  background: #fc8019;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+
+}
+
+.card button:hover {
+
+  background: #e56b00;
+
+}
+
+/* status */
+
+#status {
+
+  text-align: center;
+  font-size: 18px;
+  padding: 15px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<header>
+
+FIGGY Food Delivery
+
+</header>
+
+
+<div class="container">
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1601924928376-8b3a1e0d5b5b">
+
+<h3>Pizza</h3>
+
+<button onclick="order('Pizza')">
+Order Now
+</button>
+
+</div>
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+
+<h3>Burger</h3>
+
+<button onclick="order('Burger')">
+Order Now
+</button>
+
+</div>
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1604908176997-431c3c8c7c4c">
+
+<h3>Biryani</h3>
+
+<button onclick="order('Biryani')">
+Order Now
+</button>
+
+</div>
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0">
+
+<h3>Dosa</h3>
+
+<button onclick="order('Dosa')">
+Order Now
+</button>
+
+</div>
+
+
+</div>
+
+
+<div id="status">
+
+Order status will appear here
+
+</div>
+
+
+<script>
+
+const API =
+"https://order-service-847649606024.us-central1.run.app/order";
+
+
+function order(item) {
+
+fetch(API, {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+userId: "user1",
+supplierId: "sup1"
+})
+
+})
+.then(r => r.json())
+.then(d => {
+
+document.getElementById("status").innerText =
+item + " ordered → " + d.orderId;
+
+});
+
+}
+
+</script>
+
+
+</body>
+
+</html>

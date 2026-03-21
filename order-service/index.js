@@ -8,6 +8,8 @@ app.use(express.json());
 const firestore = new Firestore();
 const pubsub = new PubSub();
 
+
+// CREATE ORDER
 app.post('/order', async (req, res) => {
 
   const orderId = Date.now().toString();
@@ -20,14 +22,39 @@ app.post('/order', async (req, res) => {
     createdAt: new Date()
   };
 
-  await firestore.collection('orders').doc(orderId).set(order);
+  await firestore
+    .collection('orders')
+    .doc(orderId)
+    .set(order);
 
-  await pubsub.topic('order-created').publishMessage({
-    data: Buffer.from(JSON.stringify(order))
-  });
+  await pubsub
+    .topic('order-created')
+    .publishMessage({
+      data: Buffer.from(JSON.stringify(order))
+    });
 
   res.send(order);
 });
+
+
+// GET ORDER STATUS  ← NEW API
+app.get('/order/:id', async (req, res) => {
+
+  const id = req.params.id;
+
+  const doc = await firestore
+    .collection('orders')
+    .doc(id)
+    .get();
+
+  if (!doc.exists) {
+    return res.send({ error: "Not found" });
+  }
+
+  res.send(doc.data());
+
+});
+
 
 app.listen(8080, () => {
   console.log("Server started");
