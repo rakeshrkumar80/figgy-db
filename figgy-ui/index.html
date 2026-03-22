@@ -184,6 +184,8 @@ Order status will appear here
 const API =
 "https://order-service-692934068255.us-central1.run.app/order";
 
+let lastOrderId = null;
+
 
 function order(item) {
 
@@ -204,15 +206,41 @@ supplierId: "sup1"
 .then(r => r.json())
 .then(d => {
 
+lastOrderId = d.orderId;
+
 document.getElementById("status").innerText =
-item + " ordered → " + d.orderId;
+"OrderId: " + lastOrderId + " -> Status: CREATED";
+
+checkStatus();
 
 });
 
 }
 
-</script>
 
+function checkStatus() {
+
+setInterval(() => {
+
+if (!lastOrderId) return;
+
+fetch(API + "/" + lastOrderId)
+
+.then(r => r.json())
+
+.then(d => {
+
+document.getElementById("status").innerText =
+"OrderId: " + lastOrderId +
+" -> Status: " + d.status;
+
+});
+
+}, 2000);
+
+}
+
+</script>
 
 </body>
 
