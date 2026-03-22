@@ -1,5 +1,6 @@
-PROJECT_NUMBER=692934068255
-USER_ID=trainocat-1773727228355
+PROJECT_NUMBER=1082852559331
+USER_ID=trainocat-1773726914421
+
 
 gcloud config set run/region us-central1
 gcloud config set functions/region us-central1
@@ -137,7 +138,7 @@ gcloud projects add-iam-policy-binding $USER_ID \
 
 gcloud functions deploy supplierFn \
 --gen2 \
---runtime nodejs20 \
+--runtime nodejs22 \
 --region us-central1 \
 --trigger-topic order-created \
 --entry-point supplierFn \
@@ -185,6 +186,10 @@ gcloud functions deploy deliveryFn \
 --trigger-topic order-accepted \
 --entry-point deliveryFn \
 --source .
+
+curl -X POST https://order-service-$PROJECT_NUMBER.us-central1.run.app/order \
+-H "Content-Type: application/json" \
+-d '{"userId":"user1","supplierId":"sup1"}'
 
 gcloud run services add-iam-policy-binding deliveryfn \
 --region us-central1 \
